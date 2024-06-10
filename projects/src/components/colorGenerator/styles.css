@@ -1,0 +1,64 @@
+*
+{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+.container
+{
+    height:90vh;
+    width:100%;
+}
+
+.hexBtn
+{
+    margin: 10px;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.hexBtn:hover
+{
+    opacity:0.9;
+}
+
+.rgbBtn
+{
+    margin: 10px;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.rgbBtn:hover
+{
+    opacity:0.9;
+}
+
+.genBtn
+{
+    margin: 10px;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.genBtn:hover
+{
+   opacity:0.9;
+}
+
+.colorCode
+{
+    font-size: 4rem;
+    margin-top: 20%;
+    color: white;
+}

@@ -1,0 +1,85 @@
+--------------- GENERAL ---------------
+
+Browser:
+->Every time you reload, it reconstructs the entire DOM.
+
+Keys are used and needed for children because React uses them to understand any change in props. If no change has occurred, it avoids re-rendering those children -> useful for memo.
+
+--------------- VIRTUAL DOM, FIBER AND RECONCILIATION ---------------
+
+React: (createRoot)
+->Creates its own 'Virtual DOM', i.e. , a tree of the entire application and compares it with the previous virtual DOM tree and updates only the changes in the actual browser's DOM.
+
+Reconciliation: differentiation algorithm.
+->Compares the previous virtual  DOM and current virtual DOM using a differentiation algorithm to determine which parts need to be changed. Note: Git also uses a differentiation algorithm. 
+->Reconciliation is the algorithm behind what is understood as 'Virtual DOM'. Keys should be used in lists because React Fiber, which is the rewritten version of Reconciliation, uses keys for differentiation of the trees, which in turn is used for DOM updation.
+->Refreshing/reloading the page resets the state with default values for the variables.
+
+Fiber: NOT A REPLACEMENT OF RECONCILIATION.
+->First came up in React 16.
+->Used to provide scheduling and prioritisation by implementing its own virtual stack (similar to browser call stack). Each layer/frame of the stack is called a fiber
+
+--------------- STATE UPDATION/BATCHING ---------------
+->React adds all state updates in a queue and processes them during the re-render after the eventHandler/function is run.
+
+Assuming n =0:
+setState(n+1) = setState(0+1) == React saves replace with 1 in queue
+setState(n+1) = setState(0+1) == React saves replace with 1 in queue
+setState(n+1) = setState(0+1) == React saves replace with 1 in queue
+==== Since all three replace the state variable with 1, the final value visible is 1, not 3.
+
+setState(n+2) = setState(0+2) == React saves replace with 2 in queue
+setState(n => n+2) == This is said to be an updater function. React saves update the previous state by 2 in the queue. Thus, the first setState replaces n by 2, and then the updater function updates the incremented 2 by 2 to give 4. Hence the final value is seen to have been incremented by 4.
+
+
+--------------- HOOKS ---------------
+
+Hooks are functions in React that perform a task. 
+
+useState:
+->Normal variables in Javascript cannot change the DOM in React. To do so, we have to use state variables. These variables when changed trigger 're-rendering', which reflects the changes onto the DOM. State variables are used to reflect changes in the JSX within the return() part of the component, i.e., to perform any UI updation/visual changes on the page.
+
+->Re-rendering means that the entire code of the component where the state variable is defined is executed again. State variables that have been changed/that causes the re-render take their new values. Local, non-state variables are reinitialized to default. Fiber and Reconciliation ensure that only the changed parts of the UI are reflected. The other parts of UI remain untouched.
+
+->State variable updation and useState is asynchronous => JS does not wait for it to execute. --> Revisit 3:40:00.
+
+useEffect:
+->used when there is external interaction, like data fetch from API.
+->if no dependency array is provided, runs on mount/first time app load and every re-render.
+->if empty dependency array is provided, then it runs only on loading app for the first time.
+->dependency array can have internal state variables/functions/props -> it is used to listen to changes in them.
+->CLEANUP functions: written inside useEffect and run when component with useEffect is unmounted/removed from UI.
+->run for every useEffect in the entire component when it is unmounted, irrespective of presence/absence of dependency array or any values of dependency array. 
+->Without cleanup functions, memory leaks can occur.
+-> return ()=>{
+    //cleanup logic
+}
+
+useRef: do not use it for just state variable updation, useState/combination of useState, useEffect is sufficient for that.
+-> used to select/manipulate DOM elements, not necessarily for state variable updation.
+-> unlike state variables, refs do not cause a re-render when changed. 
+->They retain their values in a memory that persists across render cycles. This means that changes to refs are stored in memory and retained, but unless a state variable changes and causes a re-render, the changes in refs do not reflect visually on-screen.
+->Used whenever:
+    1. You want to persist values across re-renders, and not let the value be initialised each time a re-render happens.
+    2. You want to point to a DOM element.
+-> forwardRef: refs are used to point to actual DOM elements. But when the actual DOM element is created by the child component and we want to control it from the parent, we use forwardRef.
+-> You create the refs in the parent and pass them as props to the child component.
+-> You wrap the child component in a forwardRef, and then use the ref parameter of forwardRef in your JSX to point to the actual DOM element. 
+->So essentially, you are making the child component point to the actual DOM element, and then forwarding this reference to the parent using forwardRef.
+->So now, the parent has access to the actual DOM element too.
+
+useCallback: prevents recreation of the function in memory.
+
+createContext API and useContext hook:
+->Props drilling: passing props through layers of nested components -> hard to trace back the origin.
+->Why context: to avoid props drilling.
+->Context: once defined in the parent, makes the parent data available to the whole tree below it.
+    Advantages: 1. Easier to maintain. 
+                2. Lesser props passed to children.
+
+Custom hooks:
+->Name it starting from 'use'.
+->Creates an isolated environment everytime you use it in a component. You can pass different props to it from each component where it is being used.
+
+----------- REACT-ROUTER-DOM ----------
+->Difference between Link and HTML anchor <a></a> tag: Link does client side routing using Javascript only while anchor tag refreshes the entire page requesting for all the HTML, CSS and JS to be loaded again.
